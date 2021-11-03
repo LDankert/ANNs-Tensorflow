@@ -14,7 +14,8 @@ def sigmoid(x):
 
 # simple derivative of the sigmoid function
 def sigmoidprime(x):
-    return -np.log(x / (1-x))
+    sigm = sigmoid(x)
+    return sigm * (1 - sigm)
 
 # input array
 inputs = np.array([[1, 1], [1, 0], [0, 1], [0, 0]])
