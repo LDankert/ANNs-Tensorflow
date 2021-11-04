@@ -7,6 +7,7 @@ Author: LDankert
 """
 
 import numpy as np
+from multi_layer_perceptron import MultiLayerPerceptron
 
 # simple sigmoid function
 def sigmoid(x):
@@ -26,3 +27,7 @@ _or =   np.array([1,1,1,0])
 _nand = np.array([0,1,1,1])
 _nor =  np.array([0,0,0,1])
 _xor =  np.array([0,1,1,0])
+
+
+# Training Area
+MLP = MultiLayerPerceptron(4)

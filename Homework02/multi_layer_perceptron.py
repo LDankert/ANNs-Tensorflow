@@ -15,24 +15,40 @@ class MultiLayerPerceptron():
     # Constructor, need a list of perceptrons
     def __init__(self, perceptrons):
         self.perceptrons = perceptrons
-        self.outputs = Perceptron(len(perceptrons))
+        self.outputs = Perceptron(len(self.perceptrons))
 
 
     # Inputs passed through the networks
     def forward_step(self, inputs):
         perceptron = self.perceptron_generator()
-        outputs = []
+        activations = []
         for input in inputs:
             actualPerceptron = next(perceptron)
             actualPerceptron.forward_step(input)
-            outputs.append(actualPerceptron.activation)
-        self.outputs.forward_step(outputs)
+            activations.append(actualPerceptron.activation)
+        self.outputs.forward_step(activations)
 
     # Update the network parameters
     def backprob_step(self, groundTruth):
-        delta = -(groundTruth * self.outputs.activation)*sigmoidprime(self.outputs.activation)
-        self.outputs.update(delta)
-        delta =
+        # First calc the output depending of the ground truth and update the output perceptron
+        deltaOutput = -(groundTruth * self.outputs.activation)*sigmoidprime(self.outputs.activation)
+        self.outputs.update(deltaOutput)
+        # Now update all perceptrons with delta depending on first delta
+        for perceptron in self.perceptrons:
+            delta = sum(deltaOutput * perceptron.weights) * sigmoidprime(perceptron.activation)
+            perceptron.update(delta)
+
+    # Output perceptron setter weigths has to match perceptrons
+    def set_outputs(self,perceptron):
+        if len(perceptron.weights) != len(self.perceptrons):
+            raise Exception ("Weights of output perceptron does not match number of perceptrons")
+        else:
+            self.outputs = perceptron
+
+    # Perceptron setter, needs a list of Perceptrons, generates a fitting output perceptron too
+    def set_perceptrons(self,perceptrons):
+        self.perceptrons = perceptrons
+        self.outputs = Perceptron(len(self.perceptrons))
 
     # Iterates over all perceptrons
     def perceptron_generator(self):
