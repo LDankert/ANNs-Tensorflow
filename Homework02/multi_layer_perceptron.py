@@ -6,32 +6,28 @@ Created: 01.11.21, 20:22
 Author: LDankert
 """
 
-import numpy as np
-from perceptron import Perceptron
-from main import sigmoid,sigmoidprime
+from perceptron import Perceptron, sigmoid
 
-class MultiLayerPerceptron():
+
+class MultiLayerPerceptron:
 
     # Constructor, need a list of perceptrons
     def __init__(self, perceptrons):
         self.perceptrons = perceptrons
         self.outputs = Perceptron(len(self.perceptrons))
 
-
     # Inputs passed through the networks
     def forward_step(self, inputs):
-        perceptron = self.perceptron_generator()
-        activations = []
-        for input in inputs:
-            actualPerceptron = next(perceptron)
-            actualPerceptron.forward_step(input)
-            activations.append(actualPerceptron.activation)
-        self.outputs.forward_step(activations)
+        hidden_activations = []
+        for perceptron in self.perceptrons:
+            perceptron.forward_step(inputs)
+            hidden_activations.append(perceptron.activation)
+        self.outputs.forward_step(hidden_activations)
 
     # Update the network parameters
-    def backprob_step(self, groundTruth):
+    def backprob_step(self, target):
         # First calc the output depending of the ground truth and update the output perceptron
-        deltaOutput = -(groundTruth * self.outputs.activation)*sigmoidprime(self.outputs.activation)
+        deltaOutput = (self.outputs.activation - target) * sigmoidprime(self.outputs.activation)
         self.outputs.update(deltaOutput)
         # Now update all perceptrons with delta depending on first delta
         for perceptron in self.perceptrons:
@@ -56,14 +52,7 @@ class MultiLayerPerceptron():
             yield perceptron
 
 
-test = MultiLayerPerceptron([Perceptron(4), Perceptron(2), Perceptron(3)])
-print(test.outputs.bias)
-test.forward_step([[1,2,3,4],[2,3],[4,2,1]])
-print(test.outputs.bias)
-test.backprob_step()
-print(test.outputs.bias)
-test.forward_step([[4,2,2,1],[1,4],[1,1,1]])
-print(test.outputs.bias)
-test.backprob_step()
-print(test.outputs.bias)
-
+# simple derivative of the sigmoid function
+def sigmoidprime(x):
+    s = sigmoid(x)
+    return s * (1 - s)

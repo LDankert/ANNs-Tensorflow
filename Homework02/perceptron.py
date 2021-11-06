@@ -7,11 +7,11 @@ Author: LDankert
 """
 import numpy
 import numpy as np
-from main import sigmoid, sigmoidprime
 
-class Perceptron():
 
-    #Constructor
+class Perceptron:
+
+    # Constructor
     def __init__(self, input_units):
         self.weights = np.random.randn(input_units)
         self.bias = np.random.randn()
@@ -25,7 +25,7 @@ class Perceptron():
             raise Exception ("Inputs number doesn't match weight numbers")
         else:
             # multiply the weights with corresponding inputs
-            activation = sum(inputs*self.weights)
+            activation = np.sum((inputs*self.weights))
             # adding the bias to the activation
             activation += self.bias
             self.activation = sigmoid(activation)
@@ -46,3 +46,6 @@ class Perceptron():
     def set_bias(self, bias):
         self.bias = bias
 
+# simple sigmoid function
+def sigmoid(x):
+    return 1/(1 + np.exp(-x))
