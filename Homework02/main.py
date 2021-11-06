@@ -22,12 +22,13 @@ def sigmoidprime(x):
 inputs = np.array([[1, 1], [1, 0], [0, 1], [0, 0]])
 
 # gates
-_and =  np.array([1,0,0,0])
-_or =   np.array([1,1,1,0])
-_nand = np.array([0,1,1,1])
-_nor =  np.array([0,0,0,1])
-_xor =  np.array([0,1,1,0])
+gate_and =  np.array([1,0,0,0])
+gate_or =   np.array([1,1,1,0])
+gate_nand = np.array([0,1,1,1])
+gate_nor =  np.array([0,0,0,1])
+gate_xor =  np.array([0,1,1,0])
 
+all_gates = [gate_and, gate_or, gate_nand, gate_nor, gate_xor]
 
 # Training Area
 MLP = MultiLayerPerceptron(4)
