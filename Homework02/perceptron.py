@@ -24,11 +24,9 @@ class Perceptron:
         if np.size(inputs) != np.size(self.weights):
             raise Exception ("Inputs number doesn't match weight numbers")
         else:
-            # multiply the weights with corresponding inputs
-            activation = np.sum((inputs*self.weights))
-            # adding the bias to the activation
-            activation += self.bias
-            self.activation = sigmoid(activation)
+            # multiply the weights with corresponding inputs and add bias
+            net_input = np.sum((inputs*self.weights)) + self.bias
+            self.activation = sigmoid(net_input)
 
     # Updates the parameters of the perceptron
     def update(self, delta):

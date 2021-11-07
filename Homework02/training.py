@@ -3,7 +3,7 @@ Modul for training function
 
 Created: 06.11.21, 22:14
 
-Author: LDankert
+Author: VProiss
 """
 
 import numpy as np
