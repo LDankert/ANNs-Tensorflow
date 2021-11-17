@@ -9,4 +9,4 @@ To run the python modules just execute `python main.py` inside the folder in a t
 
 
 ## Homework 03
-We did this assignment in a jupyter-notebook in google colab. You can easy acces it with google colab, enjoy.
+We did this assignment in a jupyter-notebook in google colab. You can easily access it with google colab, enjoy.
