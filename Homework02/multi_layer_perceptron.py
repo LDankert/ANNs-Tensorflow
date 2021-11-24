@@ -25,6 +25,7 @@ class MultiLayerPerceptron:
         self.outputs.forward_step(hidden_activations)
 
     # Update the network parameters
+    # We think we have here a mistake, we maybe should use the net input not the activation for the delta!!
     def backprob_step(self, target):
         # First calc the output depending of the ground truth and update the output perceptron
         deltaOutput = (self.outputs.activation - target) * sigmoidprime(self.outputs.activation)
