@@ -1,6 +1,6 @@
 # ANNs-Tensorflow
 
-## Homework solutions from Vera Proiss, Inga Wohlert and Léon Danekert
+## Homework solutions from Vera Proiss, Inga Wohlert and Léon Dankert
 ### Homework group 11
 
 
