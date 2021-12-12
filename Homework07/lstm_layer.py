@@ -26,7 +26,8 @@ class LSTM_Layer(Layer):
         for i in range(max_seq_len):
             state = self.cells(x[i],state)
             new_stats = new_stats.write(i, state)
-        return tf.transpose(new_stats.stack(), [1,0,2,3])
+        #return tf.transpose(new_stats.stack(), [1,0,2,3])
+        return new_stats.stack()
 
     def zero_states(self, batch_size):
         return tf.zeros([batch_size, self.cells.units]), tf.zeros([batch_size, self.cells.units])

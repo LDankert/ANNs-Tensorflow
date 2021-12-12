@@ -25,17 +25,16 @@ ds = tf.data.Dataset.from_generator(my_integration_task, output_signature=(
     tf.TensorSpec(shape=(sequence_length, 1), dtype=tf.float32),
     tf.TensorSpec(shape=(1), dtype=tf.float32)))
 
-# preprocessing the dataset
 ds = preprocess_dataset(ds)
-train_dataset = ds.take(np.round(number_of_samples*0.8))
-test_dataset = ds.take(np.round(number_of_samples*0.8))
+train_dataset = ds.take(np.round(number_of_samples * 0.8))
+test_dataset = ds.take(np.round(number_of_samples * 0.8))
 
 tf.keras.backend.clear_session()
 
 num_epochs = 50
 learning_rate = 0.1
 cross_entropy_loss = tf.keras.losses.BinaryCrossentropy()
-optimizer = tf.keras.optimizers.SGD(learning_rate)
+optimizer = tf.keras.optimizers.Adam(learning_rate)
 
 model = LSTM_Model()
 

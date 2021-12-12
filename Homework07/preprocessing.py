@@ -38,7 +38,7 @@ def train_step(model, input, target, loss_function, optimizer):
     with tf.GradientTape() as tape:
         prediction = model(input)
         train_loss = loss_function(target, prediction[-1])
-        sample_training_accuracy = np.round(target, 0) == np.round(prediction[-1], 0)  # np.round(,0)
+        sample_training_accuracy = np.round(target, 0) == np.round(prediction[-1][-1], 0)  # np.round(,0)
         sample_training_accuracy = np.mean(sample_training_accuracy)
         gradients = tape.gradient(train_loss, model.trainable_variables)
     optimizer.apply_gradients(zip(gradients, model.trainable_variables))
