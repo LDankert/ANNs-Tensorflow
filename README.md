@@ -22,3 +22,8 @@ We did this assignment in a jupyter-notebook in google colab. The accuracy is ab
 ## Homework 06
 
 The assignment was done in a jupyter-notebook using google colab.
+
+
+## Homework 07
+
+We did this assignmen again as moduls. Just run main.py
