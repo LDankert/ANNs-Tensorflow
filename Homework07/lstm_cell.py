@@ -30,8 +30,6 @@ class LSTM_Cell(Layer):
         hidden_state, cell_state = states
         # concatenate the h_t-1 and the input x
         input_states = tf.concat([hidden_state, x], axis=-1)
-        #input_states = tf.expand_dims(input_states,axis=-1)
-        #cell_state = tf.expand_dims(cell_state,axis=-1)
         # calculate the next cell state from the forgetGate, inputGate
         next_cell_state = tf.multiply(self.forgetGate(input_states), cell_state) + \
                           tf.multiply(self.inputGate(input_states), self.cellStateCandidates(input_states))

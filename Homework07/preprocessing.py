@@ -33,9 +33,32 @@ def preprocess_dataset(dataset):
     return dataset
 
 
+# @tf.function
 def train_step(model, input, target, loss_function, optimizer):
     with tf.GradientTape() as tape:
         prediction = model(input)
-        print(prediction)
-        loss = loss_function(target, prediction)
-    return loss
+        train_loss = loss_function(target, prediction[-1])
+        sample_training_accuracy = np.round(target, 0) == np.round(prediction[-1], 0)  # np.round(,0)
+        sample_training_accuracy = np.mean(sample_training_accuracy)
+        gradients = tape.gradient(train_loss, model.trainable_variables)
+    optimizer.apply_gradients(zip(gradients, model.trainable_variables))
+    return train_loss, sample_training_accuracy
+
+
+def test(model, test_data, loss_function):
+    # test over complete test data
+    test_accuracy_aggregator = []
+    test_loss_aggregator = []
+
+    for (input, target) in test_data:
+        prediction = model(input)
+        sample_test_loss = loss_function(target, prediction)  # tf.keras.losses.BinaryCrossentropy()
+        sample_test_accuracy = np.round(target, 0) == np.round(prediction, 0)  # np.round(,0)
+        sample_test_accuracy = np.mean(sample_test_accuracy)
+        test_loss_aggregator.append(sample_test_loss.numpy())
+        test_accuracy_aggregator.append(np.mean(sample_test_accuracy))
+
+    test_loss = np.mean(test_loss_aggregator)
+    test_accuracy = np.mean(test_accuracy_aggregator)
+
+    return test_loss, test_accuracy
