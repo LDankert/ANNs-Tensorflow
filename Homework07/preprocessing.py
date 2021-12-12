@@ -15,10 +15,10 @@ def integration_task(seq_len, num_samples):
         # generating noise error
         noise = np.random.normal(size=seq_len)
         # calculates target
-        target = int(np.sum(noise, axis=-1) >= 0)
+        target = np.int(np.sum(noise, axis=-1) >= 0)
         # handle empty dimensions
-        np.expand_dims(noise, -1)
-        np.expand_dims(target, -1)
+        noise = tf.expand_dims(noise, axis=-1)
+        target = np.expand_dims(target, axis=-1)
         yield noise, target
 
 
@@ -27,7 +27,15 @@ def preprocess_dataset(dataset):
     # shuffle the datasets
     dataset = dataset.shuffle(buffer_size=1000)
     # batch the datasets
-    dataset = dataset.batch(64)
+    dataset = dataset.batch(10)
     # prefetch the datasets
     dataset = dataset.prefetch(12)
     return dataset
+
+
+def train_step(model, input, target, loss_function, optimizer):
+    with tf.GradientTape() as tape:
+        prediction = model(input)
+        print(prediction)
+        loss = loss_function(target, prediction)
+    return loss

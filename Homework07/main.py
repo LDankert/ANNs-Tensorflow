@@ -8,9 +8,10 @@ Author: LDankert
 
 import numpy as np
 import tensorflow as tf
-from preprocessing import preprocess_dataset, integration_task
+from model import LSTM_Model
+from preprocessing import preprocess_dataset, integration_task, train_step
 
-sequence_length = 2  # will be imported from preprocessing module
+sequence_length = 5  # will be imported from preprocessing module
 number_of_samples = 200  # will be imported from preprocessing module
 
 
@@ -21,13 +22,21 @@ def my_integration_task():
 
 # generating datasets output_signature adds metadata to the dataset like dtype
 ds = tf.data.Dataset.from_generator(my_integration_task, output_signature=(
-    tf.TensorSpec(shape=sequence_length, dtype=tf.float32),
-    tf.TensorSpec(shape=None, dtype=tf.float32)))
+    tf.TensorSpec(shape=(sequence_length,1), dtype=tf.float32),
+    tf.TensorSpec(shape=(1), dtype=tf.float32)))
 
 # preprocessing the dataset
 ds = preprocess_dataset(ds)
 
-# print(next(my_integration_task())[0])
+tf.keras.backend.clear_session()
 
-for element in ds:
-    print(element)
+num_epochs = 50
+learning_rate = 0.1
+binary_entropy_loss = tf.keras.losses.BinaryCrossentropy()
+optimizer = tf.keras.optimizers.Adam(learning_rate)
+
+model = LSTM_Model()
+
+for input, target in ds:
+    train_step(model, input, target, binary_entropy_loss, optimizer)
+
