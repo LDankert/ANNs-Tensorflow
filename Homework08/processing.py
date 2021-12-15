@@ -27,24 +27,23 @@ def preprocessing_data(dataset, noise_factor):
     dataset: tf.dataset
         the preprocessed dataset
     """
-    # add 3rd color row
-    dataset = dataset.map(lambda img, target: (tf.expand_dims(img, axis=2), target))
     # change dtype into float 32
     dataset = dataset.map(lambda img, target: (tf.cast(img, tf.float32), target))
     # normalize the data
     dataset = dataset.map(lambda img, target: ((img / 256.), target))
+    # add 3rd color row
+    dataset = dataset.map(lambda img, target: (tf.expand_dims(img, axis=-1), target))
     # change target into the original image
     dataset = dataset.map(lambda img, target: (img, img))
     # creates a random vector and
-    dataset = dataset.map(
-        lambda img, target: (img + tf.random.normal([28, 28, 1, 1], mean=0.0, stddev=1.0,
-                                                                   dtype=tf.float32), target))
+    dataset = dataset.map(lambda img, target: (img + noise_factor *
+                                               tf.random.normal([28, 28, 1, 1], mean=0.0, stddev=1.0, dtype=tf.float32), target))
     # clip the values between 0 and 1
     dataset = dataset.map(lambda img, target: (tf.clip_by_value(img, clip_value_min=0, clip_value_max=1), target))
     # shuffle the datasets
     dataset = dataset.shuffle(buffer_size=1000)
     # batch the datasets
-    dataset = dataset.batch(128)
+    dataset = dataset.batch(64)
     # prefetch the datasets
     dataset = dataset.prefetch(12)
     return dataset
@@ -75,7 +74,7 @@ def train_step(model, input, target, loss_function, optimizer):
         loss = loss_function(target, prediction)
     gradients = tape.gradient(loss, model.trainable_variables)
     optimizer.apply_gradients(zip(gradients, model.trainable_variables))
-    return loss, prediction
+    return loss, prediction, input
 
 
 def test(model, test_data, loss_function):

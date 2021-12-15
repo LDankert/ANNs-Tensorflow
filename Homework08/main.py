@@ -14,21 +14,23 @@ from processing import preprocessing_data, train_step, test
 from autoencoder import Autoencoder
 
 # hyper parameter for noise
-noise_factor = 0
+noise_factor = 0.1
 
 (ds_train, ds_test), info = tfds.load('mnist', split=['train', 'test'], with_info=True, as_supervised=True)
 #fig = tfds.show_examples(ds_train, info)
 
-print(ds_train)
+ds_train = ds_train.take(6000)
+ds_test = ds_test.take(1000)
+# Preprocessing the two datasets
 ds_train = preprocessing_data(ds_train, noise_factor)
 ds_test = preprocessing_data(ds_test, noise_factor)
-print(ds_train)
 
 tf.keras.backend.clear_session()
 
-num_epochs = 10
+num_epochs = 10 # training epochs
 learning_rate = 0.001
 
+# Initialize the autoencoder
 encoder = Autoencoder()
 # Initialize the loss function.
 global_loss_function = tf.keras.losses.CategoricalCrossentropy()
@@ -57,19 +59,30 @@ for epoch in range(num_epochs):
     print(f'Epoch: {epoch} starting with test accuracy {test_accuracies[-1]}')
 
     # Iterate over the batches of the dataset
-    prediction = None
+    predictions = None # For later visualisation
+    inputs = None # For later visualisation
     epoch_loss_agg = np.empty(0)
     for input, target in ds_train:
-        train_loss, prediction = train_step(encoder, input, target, global_loss_function, optimizer)
+        train_loss, predictions, inputs = train_step(encoder, input, target, global_loss_function, optimizer)
         epoch_loss_agg = np.append(epoch_loss_agg, train_loss)
 
-    n = 10
-    plt.figure(figsize=(20, 2))
+    # Visualisation for every epoch
+    n = 5
+    plt.figure(figsize=(10, 9))
     for i in range(n):
-        ax = plt.subplot(1, n, i + 1)
+        # first the original with noise picture
+        ax = plt.subplot(3, n, i + 1)
         plt.title("original + noise")
-        plt.imshow(tf.squeeze(prediction[i]))
-        plt.gray()
+        plt.imshow(tf.squeeze(inputs[i]))
+        # second the prediction from the encodert
+        ax = plt.subplot(3, n, i + n + 1)
+        plt.title("prediction")
+        plt.imshow(tf.squeeze(predictions[i]))
+        # finally the corresponding target
+        ax = plt.subplot(3, n, i + 2 * n + 1)
+        plt.title("target")
+        plt.imshow(tf.squeeze(target[i]))
+    plt.suptitle(f"Noisy images after {epoch} epochs")
     plt.show()
 
 
