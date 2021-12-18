@@ -16,15 +16,17 @@ class Decoder(Model):
         self.decoder = tf.keras.Sequential([
         #self.decoder = [
             layers.Dense(49, activation="sigmoid"),
-            layers.Reshape((7, 7, 1, 1)),
-            layers.Conv3DTranspose(8, kernel_size=(3, 3, 3), strides=(2,2,1), activation='relu', padding='same'),
-            layers.Conv3DTranspose(16, kernel_size=(3, 3, 3), strides=(2,2,1), activation='relu', padding='same'),
-            layers.Conv3D(1, kernel_size=(3, 3, 3), activation='sigmoid', padding='same')])
+            layers.Reshape((7, 7, 1)),
+            layers.Conv2DTranspose(8, kernel_size=3, strides=2, activation='relu', padding='same', kernel_initializer='random_normal'),
+            layers.Conv2DTranspose(16, kernel_size=3, strides=2, activation='relu', padding='same', kernel_initializer='random_normal'),
+            layers.Conv2D(1, kernel_size= 3, activation='sigmoid', padding='same')
+        ])
 
-    def call(self, x):
+    def call(self, x, training=False):
         #print('decoder')
         #for layer in self.decoder:
         #    x = layer(x)
         #    print(x.shape)
-        x = self.decoder(x)
+        x = self.decoder(x, training)
+        #tf.print(f"After decoder: {tf.reduce_max(x)}")
         return x

@@ -14,12 +14,14 @@ class Encoder(Model):
     def __init__(self):
         super(Encoder, self).__init__()
         self.encoder = tf.keras.Sequential([
-            layers.Input(shape=(28, 28, 1, 1)),
-            layers.Conv3D(16, (3, 3, 1), activation='relu', padding='same', strides=(2,2,1)),
-            layers.Conv3D(8, (3, 3, 1), activation='relu', padding='same', strides=(2,2,1)),
+            layers.Input(shape=(28, 28, 1)),
+            layers.Conv2D(16, 3, activation='relu', padding='same', strides=2, kernel_initializer='random_normal'),
+            layers.Conv2D(8, 3, activation='relu', padding='same', strides=2, kernel_initializer='random_normal'),
             layers.Flatten(),
-            layers.Dense(10, activation='relu')])
+            layers.Dense(20, activation='relu')
+        ])
 
-    def call(self, x):
-        x = self.encoder(x)
+    def call(self, x, training=False):
+        x = self.encoder(x, training)
+        #tf.print(f"After encoder: {tf.reduce_max(x)}")
         return x
