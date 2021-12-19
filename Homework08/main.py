@@ -19,13 +19,13 @@ from autoencoder import Autoencoder
 
 
 # hyper parameter for noise
-noise_factor = 0.1
+noise_factor = 0.2
 
 (ds_train, ds_test), info = tfds.load('mnist', split=['train', 'test'], with_info=True, as_supervised=True)
 # fig = tfds.show_examples(ds_train, info)
 
-ds_train = ds_train.take(6000)
-ds_test = ds_test.take(1000)
+#ds_train = ds_train.take(6000)
+#ds_test = ds_test.take(1000)
 # Preprocessing the two datasets
 ds_train = preprocessing_data(ds_train, noise_factor)
 ds_test = preprocessing_data(ds_test, noise_factor)
@@ -33,8 +33,8 @@ ds_test = preprocessing_data(ds_test, noise_factor)
 
 tf.keras.backend.clear_session()
 
-num_epochs = 10  # training epochs
-learning_rate = 0.001
+num_epochs = 15  # training epochs
+learning_rate = 0.005
 
 # Initialize the autoencoder
 autoencoder = Autoencoder()
@@ -121,20 +121,19 @@ plt.show()
 
 print(autoencoder.summary())
 # Embed the first 1000 test images
-num_to_embed = 100
+num_to_embed = 1000
 
 # Unpack the training dataset
 test_inputs = ds_test.take(num_to_embed)
 
 embedded_imgs = []
 for input, _ in test_inputs:
-    embedded_imgs.append(autoencoder.encoder(input))
+    embedded_imgs.append(autoencoder.encoder(input, training=False))
 
 tsne = TSNE(n_components=2)
-embedded_imgs = tsne.fit_transform(embedded_imgs[1])
-embedded_imgs = np.reshape(num_to_embed,2)
-print(embedded_imgs)
+tsne_data = tsne.fit_transform(embedded_imgs[i])
+x, y = [[img[i] for img in tsne_data] for i in (0,1)]
 
 plt.figure()
-plt.scatter(x=embedded_imgs[0], y=embedded_imgs[1])
+plt.scatter(x=x, y=y)
 plt.show()

@@ -22,7 +22,7 @@ class Decoder(Model):
             layers.Conv2D(1, kernel_size= 3, activation='sigmoid', padding='same')
         ])
 
-    def call(self, x, training=False):
+    def call(self, x, training):
         #print('decoder')
         #for layer in self.decoder:
         #    x = layer(x)

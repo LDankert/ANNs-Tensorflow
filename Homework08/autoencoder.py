@@ -18,7 +18,7 @@ class Autoencoder(Model):
         self.encoder = Encoder()
         self.decoder = Decoder()
 
-    def call(self, x, training=False):
+    def call(self, x, training):
         x = self.encoder(x, training)
         x = self.decoder(x, training)
         return x

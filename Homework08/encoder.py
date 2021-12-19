@@ -18,10 +18,10 @@ class Encoder(Model):
             layers.Conv2D(16, 3, activation='relu', padding='same', strides=2, kernel_initializer='random_normal'),
             layers.Conv2D(8, 3, activation='relu', padding='same', strides=2, kernel_initializer='random_normal'),
             layers.Flatten(),
-            layers.Dense(20, activation='relu')
+            layers.Dense(10, activation='relu')
         ])
 
-    def call(self, x, training=False):
+    def call(self, x, training):
         x = self.encoder(x, training)
         #tf.print(f"After encoder: {tf.reduce_max(x)}")
         return x

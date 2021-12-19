@@ -45,7 +45,7 @@ def preprocessing_data(dataset, noise_factor):
     # batch the datasets
     dataset = dataset.batch(200)
     # prefetch the datasets
-    dataset = dataset.prefetch(12)
+    dataset = dataset.prefetch(20)
     return dataset
 
 
