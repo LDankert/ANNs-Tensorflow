@@ -27,3 +27,7 @@ The assignment was done in a jupyter-notebook using google colab.
 ## Homework 07
 
 We did this assignmen again as moduls. Just run main.py
+
+## Homework 08
+
+To run the python modules just execute `python main.py` inside the folder in a terminal.
